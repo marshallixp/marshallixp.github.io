@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Your awesome title</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>http://yourdomain.com/</link>
+    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 26 Jul 2016 16:55:38 +0800</pubDate>
+    <lastBuildDate>Tue, 26 Jul 2016 16:55:38 +0800</lastBuildDate>
+    <generator>Jekyll v2.5.0</generator>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Tom&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &amp;#39;Hi, Tom&amp;#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://github.com/jekyll/jekyll-help&quot;&gt;Jekyll’s dedicated Help repository&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 27 Jul 2016 00:44:59 +0800</pubDate>
+        <link>http://yourdomain.com/jekyll/update/2016/07/27/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2016/07/27/welcome-to-jekyll.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>solver文件各参数说明文档</title>
+        <description>&lt;pre&gt;&lt;code&gt;train_net/test_net ： 网络定义文件的路径
+test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_size
+test_interval : 训练阶段，定义迭代的次数进行测试，如500次迭代一次测试
+base_lr ： 初始学习速率
+- fixed : 保持base_lr不变
+- step ： 需设置stepsize, 返回base_lr * gamma ^ (floor(iter / stepsize))
+- inv : 需设置power，返回base_lr * (1 + gamma*iter)^(-power)
+- poly : 进行多项式误差，返回base_lr*(1-iter/max_iter)^power
+- sigmoid ： 进行sigmoid衰减，返回base_lr*(1/(1+exp(-gamma*(iter-stepsize))))
+momentum : 含该参数的sgd
+weight_decay : 权重衰减
+lr_policy : 学习参数的衰减方式
+gamma, power
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        <pubDate>Wed, 27 Jul 2016 00:44:59 +0800</pubDate>
+        <link>http://yourdomain.com/segmentation/2016/07/27/train-on-pascal.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/07/27/train-on-pascal.html</guid>
+        
+        
+        <category>segmentation</category>
+        
+      </item>
+    
+  </channel>
+</rss>
