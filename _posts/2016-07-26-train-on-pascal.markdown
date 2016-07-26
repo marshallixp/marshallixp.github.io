@@ -8,48 +8,48 @@ categories: segmentation
 SegNet Training
 
 **Step1. 不训练（没有反向过程），直接测试。**
-    1）不用pretrained模型
-    2）使用pretrained模型
-    其中，1）结果如下：
-    >>> 2016-07-25 15:29:18.270980 Iteration 0 loss 87.3365001902
-    >>> 2016-07-25 15:29:18.271152 Iteration 0 overall accuracy 0.733180213097
-    >>> 2016-07-25 15:29:18.271215 Iteration 0 mean accuracy 0.047619047619
-    >>> 2016-07-25 15:29:18.271508 Iteration 0 mean IU 0.0349133434808
-    >>> 2016-07-25 15:29:18.271601 Iteration 0 fwavacc 0.537553224877
-    相应，2）结果如下：
-    >>> 2016-07-25 15:35:54.661197 Iteration 0 loss 87.3365001902
-    >>> 2016-07-25 15:35:54.661321 Iteration 0 overall accuracy 0.733180213097
-    >>> 2016-07-25 15:35:54.661488 Iteration 0 mean accuracy 0.047619047619
-    >>> 2016-07-25 15:35:54.661621 Iteration 0 mean IU 0.0349133434808
-    >>> 2016-07-25 15:35:54.661709 Iteration 0 fwavacc 0.537553224877
-    很明显，无论是否采用vgg16对没有经过训练网络的结果没有影响。
+1）不用pretrained模型
+2）使用pretrained模型
+其中，1）结果如下：
+	>>> 2016-07-25 15:29:18.270980 Iteration 0 loss 87.3365001902
+	>>> 2016-07-25 15:29:18.271152 Iteration 0 overall accuracy 0.733180213097
+	>>> 2016-07-25 15:29:18.271215 Iteration 0 mean accuracy 0.047619047619
+	>>> 2016-07-25 15:29:18.271508 Iteration 0 mean IU 0.0349133434808
+	>>> 2016-07-25 15:29:18.271601 Iteration 0 fwavacc 0.537553224877
+相应，2）结果如下：
+	>>> 2016-07-25 15:35:54.661197 Iteration 0 loss 87.3365001902
+	>>> 2016-07-25 15:35:54.661321 Iteration 0 overall accuracy 0.733180213097
+	>>> 2016-07-25 15:35:54.661488 Iteration 0 mean accuracy 0.047619047619
+	>>> 2016-07-25 15:35:54.661621 Iteration 0 mean IU 0.0349133434808
+	>>> 2016-07-25 15:35:54.661709 Iteration 0 fwavacc 0.537553224877
+很明显，无论是否采用vgg16对没有经过训练网络的结果没有影响。
     
 **Step2. 训练，再测试。**
-    solver.protoxt中参数根据文章中的设置如下：
-    train_net: "train.prototxt"
-    test_net: "val.prototxt"
-    test_initialization: false
-    test_iter: 736
-    test_interval: 999999999
-    display: 20
-    average_loss: 20
-    lr_policy: "fixed"
-    base_lr: 1e-4
-    momentum: 0.9
-    iter_size: 1 
-    max_iter: 100000
-    weight_decay: 0.0005
-    snapshot: 4000
-    snapshot_prefix: "snapshot/segnet"
-    solver_mode: GPU
+solver.protoxt中参数根据文章中的设置如下：
+train_net: "train.prototxt"
+test_net: "val.prototxt"
+test_initialization: false
+test_iter: 736
+test_interval: 999999999
+display: 20
+average_loss: 20
+lr_policy: "fixed"
+base_lr: 1e-4
+momentum: 0.9
+iter_size: 1 
+max_iter: 100000
+weight_decay: 0.0005
+snapshot: 4000
+snapshot_prefix: "snapshot/segnet"
+solver_mode: GPU
     
-    1）使用pretrained VGG16模型，每次训练步长为4000，训练结果如下：
-    >>> 2016-07-26 12:23:04.827459 Iteration 4000 loss 1.31175746871
-    >>> 2016-07-26 12:23:04.827577 Iteration 4000 overall accuracy 0.733180213097
-    >>> 2016-07-26 12:23:04.827639 Iteration 4000 mean accuracy 0.047619047619
-    >>> 2016-07-26 12:23:04.827855 Iteration 4000 mean IU 0.0349133434808
-    >>> 2016-07-26 12:23:04.828067 Iteration 4000 fwavacc 0.537553224877
-    在经过4000次迭代，大约2.5倍样本集后，发现loss在缓慢下降，但是其他测量结果没有改变。
+1）使用pretrained VGG16模型，每次训练步长为4000，训练结果如下：
+	>>> 2016-07-26 12:23:04.827459 Iteration 4000 loss 1.31175746871
+	>>> 2016-07-26 12:23:04.827577 Iteration 4000 overall accuracy 0.733180213097
+	>>> 2016-07-26 12:23:04.827639 Iteration 4000 mean accuracy 0.047619047619
+	>>> 2016-07-26 12:23:04.827855 Iteration 4000 mean IU 0.0349133434808
+	>>> 2016-07-26 12:23:04.828067 Iteration 4000 fwavacc 0.537553224877
+在经过4000次迭代，大约2.5倍样本集后，发现loss在缓慢下降，但是其他测量结果没有改变。
 
 	>>> 2016-07-26 17:29:48.209541 Iteration 48000 loss 1.56178289191
 	>>> 2016-07-26 17:29:48.209808 Iteration 48000 overall accuracy 0.733170522908
