@@ -1,15 +1,14 @@
-<pre><code>&lt;p&gt;train_net/test_net ： 网络定义文件的路径&lt;/p&gt;
-&lt;p&gt;test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_size。&lt;/p&gt;
-&lt;p&gt;test_interval : 训练阶段，定义迭代的次数进行测试，如500次迭代一次测试&lt;/p&gt;
-
-&lt;p&gt;base_lr ： 初始学习速率 &lt;/p&gt;
-&lt;p&gt;- fixed : 保持base_lr不变&lt;/p&gt;
-&lt;p&gt;- step ： 需设置stepsize, 返回base_lr * gamma ^ (floor(iter / stepsize))&lt;/p&gt;
-&lt;p&gt;- inv : 需设置power，返回base_lr * (1 + gamma*iter)^(-power)&lt;/p&gt;
-&lt;p&gt;- poly : 进行多项式误差，返回base_lr*(1-iter/max_iter)^power&lt;/p&gt;
-&lt;p&gt;- sigmoid ： 进行sigmoid衰减，返回base_lr*(1/(1+exp(-gamma*(iter-stepsize))))&lt;/p&gt;
-&lt;p&gt;momentum : 含该参数的sgd&lt;/p&gt;
-&lt;p&gt;weight_decay : 权重衰减&lt;/p&gt;
+<pre><code>train_net/test_net ： 网络定义文件的路径
+test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_size
+test_interval : 训练阶段，定义迭代的次数进行测试，如500次迭代一次测试
+base_lr ： 初始学习速率
+- fixed : 保持base_lr不变
+- step ： 需设置stepsize, 返回base_lr * gamma ^ (floor(iter / stepsize))
+- inv : 需设置power，返回base_lr * (1 + gamma*iter)^(-power)
+- poly : 进行多项式误差，返回base_lr*(1-iter/max_iter)^power
+- sigmoid ： 进行sigmoid衰减，返回base_lr*(1/(1+exp(-gamma*(iter-stepsize))))
+momentum : 含该参数的sgd
+weight_decay : 权重衰减
 lr_policy : 学习参数的衰减方式
 gamma, power
 </code></pre>
