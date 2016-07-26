@@ -5,9 +5,9 @@ date:   2016-07-26 17:09:59
 categories: segmentation
 ---
 
-	SegNet Training
+SegNet Training
 
-	**Step1. 不训练（没有反向过程），直接测试。**
+**Step1. 不训练（没有反向过程），直接测试。**
     1）不用pretrained模型
     2）使用pretrained模型
     其中，1）结果如下：
@@ -24,8 +24,8 @@ categories: segmentation
     >>> 2016-07-25 15:35:54.661709 Iteration 0 fwavacc 0.537553224877
     很明显，无论是否采用vgg16对没有经过训练网络的结果没有影响。
     
-	**Step2. 训练，再测试。**
-    solver.protoxt中参数如下：
+**Step2. 训练，再测试。**
+    solver.protoxt中参数根据文章中的设置如下：
     train_net: "train.prototxt"
     test_net: "val.prototxt"
     test_initialization: false
@@ -51,16 +51,15 @@ categories: segmentation
     >>> 2016-07-26 12:23:04.828067 Iteration 4000 fwavacc 0.537553224877
     在经过4000次迭代，大约2.5倍样本集后，发现loss在缓慢下降，但是其他测量结果没有改变。
 
-    >>> 2016-07-26 13:46:35.872747 Iteration 16000 loss 1.2992941651
-    >>> 2016-07-26 13:46:35.872888 Iteration 16000 overall accuracy 0.733180213097
-    >>> 2016-07-26 13:46:35.873006 Iteration 16000 mean accuracy 0.047619047619
-    >>> 2016-07-26 13:46:35.873130 Iteration 16000 mean IU 0.0349133434808
-    >>> 2016-07-26 13:46:35.873215 Iteration 16000 fwavacc 0.537553224877
-
+	>>> 2016-07-26 17:29:48.209541 Iteration 48000 loss 1.56178289191
+	>>> 2016-07-26 17:29:48.209808 Iteration 48000 overall accuracy 0.733170522908
+	>>> 2016-07-26 17:29:48.209855 Iteration 48000 mean accuracy 0.0476187852268
+	>>> 2016-07-26 17:29:48.209980 Iteration 48000 mean IU 0.0349132915075
+	>>> 2016-07-26 17:29:48.210064 Iteration 48000 fwavacc 0.537546775601
+    在经过48000次迭代以后，loss并没有收敛，训练失败，待续。
 
 
 	Fcn32s Training
-
 	首先，我们下载了训练好的模型fcn32s-heavy-model，发现经过finetune以后，结果会更好。
 	Fcn32s fine-tune with pretrained heavy model 
 	>>> 2016-07-11 17:09:09.316152 Begin seg tests
@@ -97,4 +96,12 @@ categories: segmentation
 	>>> 2016-07-26 13:39:00.478118 Iteration 16000 mean accuracy 0.047619047619
 	>>> 2016-07-26 13:39:00.478241 Iteration 16000 mean IU 0.0349133434808
 	>>> 2016-07-26 13:39:00.478323 Iteration 16000 fwavacc 0.537553224877
+
+	>>> 2016-07-26 17:03:43.480082 Iteration 48000 loss 3076769.60242
+	>>> 2016-07-26 17:03:43.480186 Iteration 48000 overall accuracy 0.733180213097
+	>>> 2016-07-26 17:03:43.480288 Iteration 48000 mean accuracy 0.047619047619
+	>>> 2016-07-26 17:03:43.480508 Iteration 48000 mean IU 0.0349133434808
+	>>> 2016-07-26 17:03:43.480592 Iteration 48000 fwavacc 0.537553224877
+	经过近50000次的训练，发现其中loss并没有收敛，而且另外4个指标也完全没有任何改变，和未经过训练的结果相同。可见，这里存在什么问题还没有弄清楚，待续。
+	
 
