@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Train on Pascal"
+title:  "Train on Pascal(1)"
 date:   2016-07-26 17:09:59
 categories: segmentation
 ---
@@ -8,8 +8,8 @@ categories: segmentation
 **SegNet Training**
 
 *Step1. 不训练（没有反向过程），直接测试*  
-1）不用pretrained模型  
-2）使用pretrained模型  
+1）不用pretrained vgg16模型  
+2）使用pretrained vgg16模型  
 其中，1）结果如下：
 
     >>>2016-07-25 15:29:18.270980 Iteration 0 loss 87.3365001902  
@@ -18,7 +18,7 @@ categories: segmentation
     >>>2016-07-25 15:29:18.271508 Iteration 0 mean IU 0.0349133434808  
     >>>2016-07-25 15:29:18.271601 Iteration 0 fwavacc 0.537553224877  
 相应，2）结果如下： 
- 
+
     >>>2016-07-25 15:35:54.661197 Iteration 0 loss 87.3365001902  
     >>>2016-07-25 15:35:54.661321 Iteration 0 overall accuracy 0.733180213097  
     >>>2016-07-25 15:35:54.661488 Iteration 0 mean accuracy 0.047619047619  
@@ -45,7 +45,7 @@ snapshot: 4000
 snapshot_prefix: "snapshot/segnet"  
 solver_mode: GPU  
     
-1）使用pretrained VGG16模型，训练4000次，结果如下： 
+1）使用pretrained vgg16模型，训练4000次，结果如下： 
 
     >>>2016-07-26 12:23:04.827459 Iteration 4000 loss 1.31175746871  
     >>>2016-07-26 12:23:04.827577 Iteration 4000 overall accuracy 0.733180213097  
@@ -87,7 +87,7 @@ solver_mode: GPU
     >>>2016-07-11 17:40:52.292399 Iteration 0 mean IU 0.695001155057  
     >>>2016-07-11 17:40:52.292475 Iteration 0 fwavacc 0.869301769793  
 
-其次，我们利用pretrained VGG16进行训练。目前得到的结果显示，loss会降低，但是其他测量结果并没有发生改变，如下:  
+其次，我们利用pretrained VGG16进行训练。 目前得到的结果显示，loss会降低，但是其他测量结果并没有发生改变，如下:  
 
     >>>2016-07-26 12:48:33.904036 Iteration 8000 loss 3916726.69319  
     >>>2016-07-26 12:48:33.904141 Iteration 8000 overall accuracy 0.733180213097  

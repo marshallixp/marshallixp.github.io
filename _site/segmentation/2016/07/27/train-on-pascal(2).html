@@ -6,12 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width initial-scale=1">
 
-  <title>Deep Learning Study</title>
-  <meta name="description" content="Explain the state-of-art research and Track our latest experiments.
-">
+  <title>Train on Pascal(2)</title>
+  <meta name="description" content="由于前一次训练中发现网络并没有收敛，经过查阅资料，我们决定采用以下调整方案：1) Reduce learning rate by a factor of 102) Normalize softmax loss (divide with the number of pixels -> normalize: true...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/">
+  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(2).html">
   <link rel="alternate" type="application/atom+xml" title="Deep Learning Study" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -55,47 +54,25 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <div class="post">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title">Train on Pascal(2)</h1>
+    <p class="post-meta">Jul 27, 2016</p>
+  </header>
 
-  <ul class="post-list">
-    
-      <li>
-        <span class="post-meta">Jul 27, 2016</span>
+  <article class="post-content">
+    <p>由于前一次训练中发现网络并没有收敛，经过查阅资料，我们决定采用以下调整方案：
+1) Reduce learning rate by a factor of 10
+2) Normalize softmax loss (divide with the number of pixels -> normalize: true)
+3) Try net surgery
+4) mean RGB / BGR ?</p>
 
-        <h2>
-          <a class="post-link" href="/segmentation/2016/07/27/train-on-pascal(2).html">Train on Pascal(2)</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jul 27, 2016</span>
+<p>Make sure you do not make the model to learn from the background (ignore_label=255)</p>
 
-        <h2>
-          <a class="post-link" href="/segmentation/2016/07/27/train-on-pascal(1).html">Train on Pascal(1)</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jul 27, 2016</span>
+<p>IU score / pixel-wise accuracy are more important</p>
 
-        <h2>
-          <a class="post-link" href="/segmentation/2016/07/27/train-on-camvid.html">Train on CamVid</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jul 27, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/segmentation/2016/07/27/train-overall.html">solver文件各参数说明文档</a>
-        </h2>
-      </li>
-    
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+  </article>
 
 </div>
 

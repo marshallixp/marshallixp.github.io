@@ -6,17 +6,38 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 27 Jul 2016 15:03:20 +0800</pubDate>
-    <lastBuildDate>Wed, 27 Jul 2016 15:03:20 +0800</lastBuildDate>
+    <pubDate>Wed, 27 Jul 2016 15:21:03 +0800</pubDate>
+    <lastBuildDate>Wed, 27 Jul 2016 15:21:03 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
     
       <item>
-        <title>Train on Pascal</title>
+        <title>Train on Pascal(2)</title>
+        <description>&lt;p&gt;由于前一次训练中发现网络并没有收敛，经过查阅资料，我们决定采用以下调整方案：
+1) Reduce learning rate by a factor of 10
+2) Normalize softmax loss (divide with the number of pixels -&gt; normalize: true)
+3) Try net surgery
+4) mean RGB / BGR ?&lt;/p&gt;
+
+&lt;p&gt;Make sure you do not make the model to learn from the background (ignore_label=255)&lt;/p&gt;
+
+&lt;p&gt;IU score / pixel-wise accuracy are more important&lt;/p&gt;
+</description>
+        <pubDate>Wed, 27 Jul 2016 23:09:00 +0800</pubDate>
+        <link>http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(2).html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(2).html</guid>
+        
+        
+        <category>segmentation</category>
+        
+      </item>
+    
+      <item>
+        <title>Train on Pascal(1)</title>
         <description>&lt;p&gt;&lt;strong&gt;SegNet Training&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Step1. 不训练（没有反向过程），直接测试&lt;/em&gt;&lt;br/&gt;
-1）不用pretrained模型&lt;br/&gt;
-2）使用pretrained模型&lt;br/&gt;
+1）不用pretrained vgg16模型&lt;br/&gt;
+2）使用pretrained vgg16模型&lt;br/&gt;
 其中，1）结果如下：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt;2016-07-25 15:29:18.270980 Iteration 0 loss 87.3365001902  
@@ -56,7 +77,7 @@ snapshot: 4000&lt;br/&gt;
 snapshot_prefix: &quot;snapshot/segnet&quot;&lt;br/&gt;
 solver_mode: GPU&lt;/p&gt;
 
-&lt;p&gt;1）使用pretrained VGG16模型，训练4000次，结果如下：&lt;/p&gt;
+&lt;p&gt;1）使用pretrained vgg16模型，训练4000次，结果如下：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt;2016-07-26 12:23:04.827459 Iteration 4000 loss 1.31175746871  
 &amp;gt;&amp;gt;&amp;gt;2016-07-26 12:23:04.827577 Iteration 4000 overall accuracy 0.733180213097  
@@ -103,7 +124,7 @@ solver_mode: GPU&lt;/p&gt;
 &amp;gt;&amp;gt;&amp;gt;2016-07-11 17:40:52.292475 Iteration 0 fwavacc 0.869301769793  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;其次，我们利用pretrained VGG16进行训练。目前得到的结果显示，loss会降低，但是其他测量结果并没有发生改变，如下:&lt;/p&gt;
+&lt;p&gt;其次，我们利用pretrained VGG16进行训练。 目前得到的结果显示，loss会降低，但是其他测量结果并没有发生改变，如下:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt;2016-07-26 12:48:33.904036 Iteration 8000 loss 3916726.69319  
 &amp;gt;&amp;gt;&amp;gt;2016-07-26 12:48:33.904141 Iteration 8000 overall accuracy 0.733180213097  
@@ -127,8 +148,8 @@ solver_mode: GPU&lt;/p&gt;
 &lt;p&gt;经过近50000次的训练，发现其中loss并没有收敛，而且另外4个指标也完全没有任何改变，和未经过训练的结果相同。可见，这里存在什么问题还没有弄清楚，待续。&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 01:09:59 +0800</pubDate>
-        <link>http://yourdomain.com/segmentation/2016/07/27/train-on-pascal.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/07/27/train-on-pascal.html</guid>
+        <link>http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(1).html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(1).html</guid>
         
         
         <category>segmentation</category>

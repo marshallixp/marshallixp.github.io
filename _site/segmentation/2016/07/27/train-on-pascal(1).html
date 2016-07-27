@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width initial-scale=1">
 
-  <title>Train on Pascal</title>
+  <title>Train on Pascal(1)</title>
   <meta name="description" content="SegNet Training">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-on-pascal.html">
+  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(1).html">
   <link rel="alternate" type="application/atom+xml" title="Deep Learning Study" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -57,7 +57,7 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Train on Pascal</h1>
+    <h1 class="post-title">Train on Pascal(1)</h1>
     <p class="post-meta">Jul 27, 2016</p>
   </header>
 
@@ -65,8 +65,8 @@
     <p><strong>SegNet Training</strong></p>
 
 <p><em>Step1. 不训练（没有反向过程），直接测试</em><br/>
-1）不用pretrained模型<br/>
-2）使用pretrained模型<br/>
+1）不用pretrained vgg16模型<br/>
+2）使用pretrained vgg16模型<br/>
 其中，1）结果如下：</p>
 
 <pre><code>&gt;&gt;&gt;2016-07-25 15:29:18.270980 Iteration 0 loss 87.3365001902  
@@ -106,7 +106,7 @@ snapshot: 4000<br/>
 snapshot_prefix: "snapshot/segnet"<br/>
 solver_mode: GPU</p>
 
-<p>1）使用pretrained VGG16模型，训练4000次，结果如下：</p>
+<p>1）使用pretrained vgg16模型，训练4000次，结果如下：</p>
 
 <pre><code>&gt;&gt;&gt;2016-07-26 12:23:04.827459 Iteration 4000 loss 1.31175746871  
 &gt;&gt;&gt;2016-07-26 12:23:04.827577 Iteration 4000 overall accuracy 0.733180213097  
@@ -153,7 +153,7 @@ solver_mode: GPU</p>
 &gt;&gt;&gt;2016-07-11 17:40:52.292475 Iteration 0 fwavacc 0.869301769793  
 </code></pre>
 
-<p>其次，我们利用pretrained VGG16进行训练。目前得到的结果显示，loss会降低，但是其他测量结果并没有发生改变，如下:</p>
+<p>其次，我们利用pretrained VGG16进行训练。 目前得到的结果显示，loss会降低，但是其他测量结果并没有发生改变，如下:</p>
 
 <pre><code>&gt;&gt;&gt;2016-07-26 12:48:33.904036 Iteration 8000 loss 3916726.69319  
 &gt;&gt;&gt;2016-07-26 12:48:33.904141 Iteration 8000 overall accuracy 0.733180213097  
