@@ -10,13 +10,15 @@ categories: segmentation
 *Step1. 不训练（没有反向过程），直接测试*  
 1）不用pretrained模型  
 2）使用pretrained模型  
-其中，1）结果如下：  
+其中，1）结果如下：
+
     >>>2016-07-25 15:29:18.270980 Iteration 0 loss 87.3365001902  
     >>>2016-07-25 15:29:18.271152 Iteration 0 overall accuracy 0.733180213097  
     >>>2016-07-25 15:29:18.271215 Iteration 0 mean accuracy 0.047619047619  
     >>>2016-07-25 15:29:18.271508 Iteration 0 mean IU 0.0349133434808  
     >>>2016-07-25 15:29:18.271601 Iteration 0 fwavacc 0.537553224877  
-相应，2）结果如下：  
+相应，2）结果如下： 
+ 
     >>>2016-07-25 15:35:54.661197 Iteration 0 loss 87.3365001902  
     >>>2016-07-25 15:35:54.661321 Iteration 0 overall accuracy 0.733180213097  
     >>>2016-07-25 15:35:54.661488 Iteration 0 mean accuracy 0.047619047619  
