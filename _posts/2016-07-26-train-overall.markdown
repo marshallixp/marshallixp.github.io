@@ -17,3 +17,11 @@ categories: segmentation
 	weight_decay : 权重衰减
 	lr_policy : 学习参数的衰减方式
 	gamma, power
+
+
+**Training**
+solver = caffe.SGDSolver("solver.prototxt")  
+如果进行fine-tune，则需要调用  
+solver.net.copy_from('xxx.caffemodel')
+可以继续未完成的训练，通过调用  
+solver.restore('xxx.solverstate')
