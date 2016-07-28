@@ -16,12 +16,12 @@ categories: segmentation
 a) Make sure you do not make the model to learn from the background (ignore_label=255)  
 b) IU score / pixel-wise accuracy are more important
 c) Check each layer to see it's initialized with correct values
-
+   
+   
 
 **Fcn32s Training**  
 
-根据调整方案1），目前采用fixed的学习率，取值1e-9。根据2），将softmaxloss层的normalize设置为true。  
-根据修改后的参数模型，经过4000次迭代以后，我们发现loss是在不断减小，说明模型可以收敛，但是主要的指标参数依然没有改变，需要等待进一步的结果。  
+根据调整方案1），目前采用fixed的学习率，取值1e-9。根据2），将softmaxloss层的normalize设置为true。根据修改后的参数模型，经过4000次迭代以后，我们发现loss是在不断减小，说明模型可以收敛，但是主要的指标参数依然没有改变，需要等待进一步的结果。  
 
     >>> 2016-07-27 15:58:21.062000 Iteration 4000 loss 3.04448500594  
     >>> 2016-07-27 15:58:21.062184 Iteration 4000 overall accuracy 0.733180213097  
@@ -85,8 +85,8 @@ weight_decay: 0.0005
     >>> 2016-07-28 15:40:30.566486 Iteration 4000 mean IU 0.450926431181
     >>> 2016-07-28 15:40:30.566580 Iteration 4000 fwavacc 0.742218942131
 可见，最终主要指标都出现大幅提升，说明训练有效！
-
-
+  
+  
 **SegNet Training**  
 
 根据调整方案1)，采用fixed的学习率1e-10，monentum为0.99。根据2），将softmaxloss层的normalize设置为true。  
@@ -97,9 +97,9 @@ weight_decay: 0.0005
     >>> 2016-07-27 16:36:01.449573 Iteration 4000 mean accuracy 0.047619047619  
     >>> 2016-07-27 16:36:01.449706 Iteration 4000 mean IU 0.0349133434808  
     >>> 2016-07-27 16:36:01.449798 Iteration 4000 fwavacc 0.537553224877  
-由于之前的Fcn32s网络实现了有效训练，我们将相关调整也作用于SegNet网络上，测试结果
-
-
+由于之前的Fcn32s网络实现了有效训练，我们将相关调整也作用于SegNet网络上，测试结果。
+  
+  
 **小结**
 
 由于一开始并没有弄清楚各个训练参数和网络模型参数的意思，始终将vgg16对应层进入训练，相反最后的score_fr和upscore层并没有进行训练;除此以外，除vgg16对应层外的如fc6_conv等并没有有效初始化，无法实现参数更新。而且，当训练参数如base_lr设置太小（如1e-10）也会导致训练收敛速度过慢。当然，normalize softmax loss也是必须的。

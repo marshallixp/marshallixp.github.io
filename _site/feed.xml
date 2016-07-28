@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 28 Jul 2016 15:44:17 +0800</pubDate>
-    <lastBuildDate>Thu, 28 Jul 2016 15:44:17 +0800</lastBuildDate>
+    <pubDate>Thu, 28 Jul 2016 15:51:44 +0800</pubDate>
+    <lastBuildDate>Thu, 28 Jul 2016 15:51:44 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
     
       <item>
@@ -24,22 +24,9 @@
 b) IU score / pixel-wise accuracy are more important
 c) Check each layer to see it's initialized with correct values&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;SegNet Training&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;根据调整方案1)，采用fixed的学习率1e-10，monentum为0.99。根据2），将softmaxloss层的normalize设置为true。&lt;br/&gt;
-同样，经过4000次迭代以后，我们发现修改后的参数模型，loss可以不断减小，即表示可以收敛，而且收敛速度快于Fcn32s网络，但是最主要的指标参数也依然没有出现变化，需等待进一步训练结果。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449254 Iteration 4000 loss 3.04294351251  
-&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449524 Iteration 4000 overall accuracy 0.733180213097  
-&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449573 Iteration 4000 mean accuracy 0.047619047619  
-&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449706 Iteration 4000 mean IU 0.0349133434808  
-&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449798 Iteration 4000 fwavacc 0.537553224877  
-&lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;&lt;strong&gt;Fcn32s Training&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;根据调整方案1），目前采用fixed的学习率，取值1e-9。根据2），将softmaxloss层的normalize设置为true。&lt;br/&gt;
-根据修改后的参数模型，经过4000次迭代以后，我们发现loss是在不断减小，说明模型可以收敛，但是主要的指标参数依然没有改变，需要等待进一步的结果。&lt;/p&gt;
+&lt;p&gt;根据调整方案1），目前采用fixed的学习率，取值1e-9。根据2），将softmaxloss层的normalize设置为true。根据修改后的参数模型，经过4000次迭代以后，我们发现loss是在不断减小，说明模型可以收敛，但是主要的指标参数依然没有改变，需要等待进一步的结果。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062000 Iteration 4000 loss 3.04448500594  
 &amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062184 Iteration 4000 overall accuracy 0.733180213097  
@@ -108,6 +95,20 @@ weight_decay: 0.0005&lt;br/&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;可见，最终主要指标都出现大幅提升，说明训练有效！&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;SegNet Training&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;根据调整方案1)，采用fixed的学习率1e-10，monentum为0.99。根据2），将softmaxloss层的normalize设置为true。&lt;br/&gt;
+同样，经过4000次迭代以后，我们发现修改后的参数模型，loss可以不断减小，即表示可以收敛，而且收敛速度快于Fcn32s网络，但是最主要的指标参数也依然没有出现变化，需等待进一步训练结果。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449254 Iteration 4000 loss 3.04294351251  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449524 Iteration 4000 overall accuracy 0.733180213097  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449573 Iteration 4000 mean accuracy 0.047619047619  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449706 Iteration 4000 mean IU 0.0349133434808  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449798 Iteration 4000 fwavacc 0.537553224877  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由于之前的Fcn32s网络实现了有效训练，我们将相关调整也作用于SegNet网络上，测试结果。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;小结&lt;/strong&gt;&lt;/p&gt;
 
@@ -288,11 +289,12 @@ solver.net.copy_from('xxx.caffemodel')
 可以继续未完成的训练，通过调用&lt;br/&gt;
 solver.restore('xxx.solverstate')&lt;/p&gt;
 
-&lt;p&gt;在fine-tune过程中，参数设置如下可以防止训练过程中对载入的参数数值的更改。
+&lt;p&gt;在fine-tune过程中，参数设置如下实现训练过程对模型权重的更改。
 param {&lt;br/&gt;
     lr_mult: 1&lt;br/&gt;
     decay_mult: 1&lt;br/&gt;
-}&lt;/p&gt;
+}&lt;br/&gt;
+而param{lr_mult:0}表示为保留原有模型权重（载入模型）。&lt;/p&gt;
 
 &lt;p&gt;example/net_surgery.ipynb是有效地介绍如何使用surgery的内容。&lt;/p&gt;
 </description>
