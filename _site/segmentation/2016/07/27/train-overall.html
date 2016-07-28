@@ -77,6 +77,21 @@ lr_policy : 学习参数的衰减方式
 gamma, power
 </code></pre>
 
+<p><strong>Training</strong>
+solver = caffe.SGDSolver("solver.prototxt")<br/>
+如果进行fine-tune，则需要调用<br/>
+solver.net.copy_from('xxx.caffemodel')
+可以继续未完成的训练，通过调用<br/>
+solver.restore('xxx.solverstate')</p>
+
+<p>在fine-tune过程中，参数设置如下可以防止训练过程中对载入的参数数值的更改。
+param {<br/>
+    lr_mult: 1<br/>
+    decay_mult: 1<br/>
+}</p>
+
+<p>example/net_surgery.ipynb是有效地介绍如何使用surgery的内容。</p>
+
   </article>
 
 </div>

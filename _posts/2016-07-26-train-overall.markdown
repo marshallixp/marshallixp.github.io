@@ -24,4 +24,12 @@ solver = caffe.SGDSolver("solver.prototxt")
 如果进行fine-tune，则需要调用  
 solver.net.copy_from('xxx.caffemodel')
 可以继续未完成的训练，通过调用  
-solver.restore('xxx.solverstate')
+solver.restore('xxx.solverstate')  
+
+在fine-tune过程中，参数设置如下可以防止训练过程中对载入的参数数值的更改。
+param {  
+    lr_mult: 1  
+    decay_mult: 1  
+}  
+
+example/net_surgery.ipynb是有效地介绍如何使用surgery的内容。  

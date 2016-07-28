@@ -6,21 +6,98 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 27 Jul 2016 15:21:03 +0800</pubDate>
-    <lastBuildDate>Wed, 27 Jul 2016 15:21:03 +0800</lastBuildDate>
+    <pubDate>Thu, 28 Jul 2016 15:39:25 +0800</pubDate>
+    <lastBuildDate>Thu, 28 Jul 2016 15:39:25 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
     
       <item>
         <title>Train on Pascal(2)</title>
-        <description>&lt;p&gt;由于前一次训练中发现网络并没有收敛，经过查阅资料，我们决定采用以下调整方案：
-1) Reduce learning rate by a factor of 10
-2) Normalize softmax loss (divide with the number of pixels -&gt; normalize: true)
-3) Try net surgery
+        <description>&lt;p&gt;由于前一次训练中发现网络并没有收敛，经过查阅资料，我们决定采用以下调整方案：&lt;br/&gt;
+1) Reduce learning rate by a factor of 10&lt;br/&gt;
+2) Normalize softmax loss (divide with the number of pixels -&gt; normalize: true)&lt;br/&gt;
+3) Try net surgery&lt;br/&gt;
 4) mean RGB / BGR ?&lt;/p&gt;
 
-&lt;p&gt;Make sure you do not make the model to learn from the background (ignore_label=255)&lt;/p&gt;
+&lt;p&gt;要点：
+a) Make sure you do not make the model to learn from the background (ignore_label=255)&lt;br/&gt;
+b) IU score / pixel-wise accuracy are more important
+c) Check each layer to see it's initialized with correct values&lt;/p&gt;
 
-&lt;p&gt;IU score / pixel-wise accuracy are more important&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SegNet Training&lt;/strong&gt;
+根据调整方案1)，采用fixed的学习率1e-10，monentum为0.99。根据2），将softmaxloss层的normalize设置为true。&lt;br/&gt;
+同样，经过4000次迭代以后，我们发现修改后的参数模型，loss可以不断减小，即表示可以收敛，而且收敛速度快于Fcn32s网络，但是最主要的指标参数也依然没有出现变化，需等待进一步训练结果。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449254 Iteration 4000 loss 3.04294351251  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449524 Iteration 4000 overall accuracy 0.733180213097  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449573 Iteration 4000 mean accuracy 0.047619047619  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449706 Iteration 4000 mean IU 0.0349133434808  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 16:36:01.449798 Iteration 4000 fwavacc 0.537553224877  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Fcn32s Training&lt;/strong&gt;
+根据调整方案1），目前采用fixed的学习率，取值1e-9。根据2），将softmaxloss层的normalize设置为true。&lt;br/&gt;
+根据修改后的参数模型，经过4000次迭代以后，我们发现loss是在不断减小，说明模型可以收敛，但是主要的指标参数依然没有改变，需要等待进一步的结果。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062000 Iteration 4000 loss 3.04448500594  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062184 Iteration 4000 overall accuracy 0.733180213097  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062357 Iteration 4000 mean accuracy 0.047619047619  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062504 Iteration 4000 mean IU 0.0349133434808  
+&amp;gt;&amp;gt;&amp;gt; 2016-07-27 15:58:21.062591 Iteration 4000 fwavacc 0.537553224877  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当从32000次迭代结果恢复以后，我们发现网络的损失是以很小的数值下降，约为3e-5的减小值。但是，主要指标依然没有变化。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; 2016-07-28 12:56:20.636460 Begin seg tests
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 12:59:02.790584 Iteration 48000 loss 3.04407284242
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 12:59:02.790747 Iteration 48000 overall accuracy 0.733180213097
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 12:59:02.790932 Iteration 48000 mean accuracy 0.047619047619
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 12:59:02.791069 Iteration 48000 mean IU 0.0349133434808
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 12:59:02.791161 Iteration 48000 fwavacc 0.537553224877
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 13:21:27.470571 Begin seg tests
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 13:24:08.706496 Iteration 52000 loss 3.04403515862
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 13:24:08.706656 Iteration 52000 overall accuracy 0.733180213097
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 13:24:08.706831 Iteration 52000 mean accuracy 0.047619047619
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 13:24:08.706970 Iteration 52000 mean IU 0.0349133434808
+&amp;gt;&amp;gt;&amp;gt; 2016-07-28 13:24:08.707063 Iteration 52000 fwavacc 0.537553224877  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对网络层进行检查，我们很遗憾地发现fc6_conv, fc7_conv, score_fr层，并没有被初始化，也没有训练更新，这是目前网络无法收敛的原因。&lt;/p&gt;
+
+&lt;p&gt;根据上述分析，采取如下调整：
+1) vgg16相关的层冻结，对fc6_conv, fc7_conv, score_fr, upscore激活学习参数,并且初始化，如下：&lt;br/&gt;
+param {
+    lr_mult: 1
+    decay_mult: 1
+}&lt;br/&gt;
+param {
+    lr_mult: 2
+    decay_mult: 0
+}&lt;br/&gt;
+convolution_param {
+    num_output: 4096
+    pad: 0
+    kernel_size: 1
+    stride: 1
+    weight_filler {
+      type: &quot;gaussian&quot;
+      std: 0.01
+    }
+    bias_filler {
+      type: &quot;constant&quot;
+      value: 0.1
+    }
+}&lt;/p&gt;
+
+&lt;p&gt;2）采用fixed的学习率1e-10，monentum为0.99。在经过200次迭代之后，我们观察相关层的变化情况。然而，发现除了初始化成功外，依然没有进行训练，即相关层的权重几乎没有改变（1000次迭代，除了score_fr层有微小改变）。&lt;/p&gt;
+
+&lt;p&gt;考虑到可能是学习率设置太小，现将学习率改为1e-6, momentum为0.9，再次进行训练。发现果然如预期，除了固定权重层（vgg对应）以外，其余各层权重均开始改变。设想训练参数及网络模型有效，需要进行再次训练验证。同时，根据文章中的参数设置，我们重新设置训练主要参数如下：&lt;br/&gt;
+lr_policy: &quot;fixed&quot;&lt;br/&gt;
+base_lr: 1e-4&lt;br/&gt;
+momentum: 0.9&lt;br/&gt;
+weight_decay: 0.0005&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;小结&lt;/strong&gt;
+由于一开始并没有弄清楚各个训练参数和网络模型参数的意思，始终将vgg16对应层进入训练，相反最后的score_fr和upscore层并没有进行训练;除此以外，除vgg16对应层外的如fc6_conv等并没有有效初始化，无法实现参数更新。而且，当训练参数如base_lr设置太小（如1e-10）也会导致训练收敛速度过慢。当然，normalize softmax loss也是必须的。&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 23:09:00 +0800</pubDate>
         <link>http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(2).html</link>
@@ -189,6 +266,21 @@ weight_decay : 权重衰减
 lr_policy : 学习参数的衰减方式
 gamma, power
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Training&lt;/strong&gt;
+solver = caffe.SGDSolver(&quot;solver.prototxt&quot;)&lt;br/&gt;
+如果进行fine-tune，则需要调用&lt;br/&gt;
+solver.net.copy_from('xxx.caffemodel')
+可以继续未完成的训练，通过调用&lt;br/&gt;
+solver.restore('xxx.solverstate')&lt;/p&gt;
+
+&lt;p&gt;在fine-tune过程中，参数设置如下可以防止训练过程中对载入的参数数值的更改。
+param {&lt;br/&gt;
+    lr_mult: 1&lt;br/&gt;
+    decay_mult: 1&lt;br/&gt;
+}&lt;/p&gt;
+
+&lt;p&gt;example/net_surgery.ipynb是有效地介绍如何使用surgery的内容。&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 00:44:59 +0800</pubDate>
         <link>http://yourdomain.com/segmentation/2016/07/27/train-overall.html</link>
