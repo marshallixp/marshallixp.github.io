@@ -17,7 +17,7 @@ b) IU score / pixel-wise accuracy are more important
 c) Check each layer to see it's initialized with correct values
 
 
-**SegNet Training**
+**SegNet Training**  
 根据调整方案1)，采用fixed的学习率1e-10，monentum为0.99。根据2），将softmaxloss层的normalize设置为true。  
 同样，经过4000次迭代以后，我们发现修改后的参数模型，loss可以不断减小，即表示可以收敛，而且收敛速度快于Fcn32s网络，但是最主要的指标参数也依然没有出现变化，需等待进一步训练结果。  
 
@@ -29,7 +29,7 @@ c) Check each layer to see it's initialized with correct values
 
 
 
-**Fcn32s Training**
+**Fcn32s Training**  
 根据调整方案1），目前采用fixed的学习率，取值1e-9。根据2），将softmaxloss层的normalize设置为true。  
 根据修改后的参数模型，经过4000次迭代以后，我们发现loss是在不断减小，说明模型可以收敛，但是主要的指标参数依然没有改变，需要等待进一步的结果。  
 
