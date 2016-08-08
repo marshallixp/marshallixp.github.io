@@ -34,3 +34,20 @@ param {
 而param{lr_mult:0}表示为保留原有模型权重（载入模型）。  
 
 example/net_surgery.ipynb是有效地介绍如何使用surgery的内容。  
+
+
+
+
+**训练过程：**
+1）样本预处理，均值化
+2）选择网络，ReLU
+3）初始化权重（xavier）
+4）babysitting the learning process
+5）由cross到finer处理
+
+**接下来,：**
+1）参数更新机制（adam，agagrad,）
+2）学习速率调节
+3）Dropout
+4）梯度检查
+5）模型聚合

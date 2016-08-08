@@ -197,7 +197,7 @@ weight_decay: 0.0005<br/>
 &gt;&gt;&gt; 2016-07-28 19:19:44.127536 Iteration 24254 fwavacc 0.537539625039
 </code></pre>
 
-<p>接下来，调整网络模型，设置convolution层的参数为type='gaussian', std=0.01。</p>
+<p>接下来，调整网络模型，设置convolution层的参数为type='gaussian', std=0.01。我们发现依然很难收敛。于是，为了验证添加多个crop层是否正确，通过之前已经成功在CamVid训练集上测试的SegNet网络，再使用更改后的Caffe在新的网络上（添加多个crop层）进行测试。我们发现同样在CamVid上训练，SegNet(1e-3)似乎能有比Fcn32s(1e-4)更快的收敛速度。</p>
 
 <p><strong>小结</strong></p>
 

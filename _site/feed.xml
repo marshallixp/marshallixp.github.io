@@ -6,9 +6,85 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 28 Jul 2016 20:02:24 +0800</pubDate>
-    <lastBuildDate>Thu, 28 Jul 2016 20:02:24 +0800</lastBuildDate>
+    <pubDate>Mon, 08 Aug 2016 16:11:59 +0800</pubDate>
+    <lastBuildDate>Mon, 08 Aug 2016 16:11:59 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
+    
+      <item>
+        <title>Train on Pascal(3)</title>
+        <description>&lt;p&gt;通过测试，验证了通过voc_layer均值化后的data和转换成1x1xHxW的label数据的正确。label是包含0~20以及255的同尺寸数据。label:0对应background，而1~20对应不同目标类别。现在的问题是，运用segnet网络训练后，只能收敛到背景分类。&lt;/p&gt;
+
+&lt;p&gt;目前，已经完成的训练及测试包括：
+a. Fcn32s on Pascal
+b. Fcn32s on CamVid
+c. SegNet on CamVid
+以上都有接近文章的效果ne&lt;/p&gt;
+
+&lt;p&gt;而SegNet on Pascal依然无法实现，正在测试几种改进方案：
+1）增加Dropout
+2）利用basic segnet进行测试
+3）生成符合DenseImageDataLayer的label数据集
+4）只采用少量（～10）样本进行训练&lt;/p&gt;
+
+&lt;p&gt;方案1）增加了两种不同的dropout层，全覆盖和半覆盖，包括结合不同的学习速率进行训练，依然未能解决问题。&lt;/p&gt;
+
+&lt;p&gt;方案2）basic segnet似乎也未见效，依然落入局部最小值，输出全为背景标记。&lt;/p&gt;
+
+&lt;p&gt;方案3）通过在网络测试过程中，获取的经过处理后的label图片，保存至SegmentationClass-SegNet，再调用DenseImageDataLayer进行读取。经测试，依然无效。&lt;/p&gt;
+
+&lt;p&gt;方案4）采用10个训练样本，能看到loss是在不断减小，且经过大约5000次迭代(1e-4, 0.9)以后，不全是输出到背景。且通过更改weight_decay=0.5，能收敛到非背景目标。&lt;/p&gt;
+
+&lt;p&gt;至此，我们采取的大多数测试并不能使网络有效收敛，于是，我们继续采用原文中的处理方法，将图片crop成固定大小224x224，并且通过采样不同区域，进行augmentation。再采用固定每层尺寸大小的网络，即不使用crop层，进行测试。&lt;/p&gt;
+
+&lt;p&gt;改回upsample???&lt;/p&gt;
+</description>
+        <pubDate>Tue, 02 Aug 2016 19:31:00 +0800</pubDate>
+        <link>http://yourdomain.com/segmentation/2016/08/02/train-on-pascal(3).html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/08/02/train-on-pascal(3).html</guid>
+        
+        
+        <category>segmentation</category>
+        
+      </item>
+    
+      <item>
+        <title>lsd-slam test</title>
+        <description>&lt;p&gt;some words before...&lt;/p&gt;
+
+&lt;p&gt; &lt;strong&gt;semantics are necessary to build bigger and better SLAM systems.&lt;/strong&gt;&lt;br/&gt;
+ &lt;strong&gt;Robotics is the killer application of SLAM&lt;/strong&gt;&lt;br/&gt;
+ &lt;strong&gt;Will end-to-end learning soon replace the mostly manual labor involved in building today’s SLAM systems?. &lt;/strong&gt;&lt;br/&gt;
+ -&gt;  Integrating semantics into SLAM is often talk about, but it is easier said than done. Moreno's PhD thesis: Dense Semantic SLAM&lt;/p&gt;
+
+&lt;p&gt; &lt;strong&gt;SLAM (construction) &lt;---help---&gt; Deep Learning (perception)&lt;/strong&gt;
+ large-scale &quot;correspondence engines&quot; -&gt; large-scale datasets&lt;/p&gt;
+
+&lt;p&gt;调试过程：
+1. 确认摄像头是或否工作，运用cheese
+2. 安装ros下的库uvc_camera，确认摄像头所对应设备号/dev/video*
+3. 在uvc_camera下新建launch文件夹，再新建uvc_camera_node.launch文件，复制以下代码
+&lt;launch&gt;&lt;arg name=&quot;device&quot; default=&quot;/dev/video0&quot;/&gt;
+   &lt;node pkg=&quot;uvc_camera&quot; type=&quot;camera_node&quot; name=&quot;uvc_camera&quot; output=&quot;screen&quot;&gt;
+    &lt;param name=&quot;width&quot; type=&quot;int&quot; value=&quot;640&quot; /&gt;
+    &lt;param name=&quot;height&quot; type=&quot;int&quot; value=&quot;480&quot; /&gt;
+    &lt;param name=&quot;fps&quot; type=&quot;int&quot; value=&quot;30&quot; /&gt;
+    &lt;param name=&quot;frame&quot; type=&quot;string&quot; value=&quot;wide_stereo&quot; /&gt;
+    &lt;param name=&quot;device&quot; type=&quot;string&quot; value=&quot;/dev/video0&quot; /&gt;
+  &lt;/node&gt;
+&lt;/launch&gt;
+4. 运行roscore
+5. 运行rosrun lsd_slam_viewer viewer
+6. 运行roslaunch uvc_camera uvc_camera_node.launch
+7. 运行rosrun lsd_slam_core live_slam /image:=image_raw _calib:=~/ROS_DEV/rosbuild_ws/package_dir/lsd_slam/lsd_slam_core/calib/FOVxxx.cfg&lt;/p&gt;
+</description>
+        <pubDate>Sat, 30 Jul 2016 00:44:59 +0800</pubDate>
+        <link>http://yourdomain.com/slam/2016/07/30/lsd-slam-run-on-usbcam.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/slam/2016/07/30/lsd-slam-run-on-usbcam.html</guid>
+        
+        
+        <category>slam</category>
+        
+      </item>
     
       <item>
         <title>Train on Pascal(2)</title>
@@ -147,7 +223,7 @@ weight_decay: 0.0005&lt;br/&gt;
 &amp;gt;&amp;gt;&amp;gt; 2016-07-28 19:19:44.127536 Iteration 24254 fwavacc 0.537539625039
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;接下来，调整网络模型，设置convolution层的参数为type='gaussian', std=0.01。&lt;/p&gt;
+&lt;p&gt;接下来，调整网络模型，设置convolution层的参数为type='gaussian', std=0.01。我们发现依然很难收敛。于是，为了验证添加多个crop层是否正确，通过之前已经成功在CamVid训练集上测试的SegNet网络，再使用更改后的Caffe在新的网络上（添加多个crop层）进行测试。我们发现同样在CamVid上训练，SegNet(1e-3)似乎能有比Fcn32s(1e-4)更快的收敛速度。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;小结&lt;/strong&gt;&lt;/p&gt;
 
@@ -291,11 +367,39 @@ solver_mode: GPU&lt;/p&gt;
     
       <item>
         <title>Train on CamVid</title>
-        <description>&lt;p&gt;SegNet on CamVid&lt;/p&gt;
+        <description>&lt;p&gt;&lt;strong&gt;camvid training and test&lt;/strong&gt;
+python /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prototxt /SegNet/Models/Training/segnet_iter_10000.caffemodel /Segnet/Models/Inference/&lt;/p&gt;
 
-&lt;p&gt;-- SegNet + pretrained VGG16
--&gt; 10000 iteration (currently)
-   Global acc = 0.85041 Class average acc = 0.48181 Mean Int over Union = 0.414&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SegNet + Pretrained VGG16&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1&gt;Iteration 30000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.85501 Class average acc = 0.5228 Mean Int over Union = 0.44517&lt;/p&gt;
+
+&lt;h1&gt;Iteration 20000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.85167 Class average acc = 0.52274 Mean Int over Union = 0.44069&lt;/p&gt;
+
+&lt;h1&gt;Iteration 10000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.85101 Class average acc = 0.46322 Mean Int over Union = 0.40203&lt;/p&gt;
+
+&lt;p&gt;SegNet modified (修正crop层，可以自动实现不同层之间的匹配)&lt;/p&gt;
+
+&lt;h1&gt;Iteration 16468:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.81453 Class average acc = 0.46955 Mean Int over Union = 0.3876&lt;/p&gt;
+
+&lt;h1&gt;Iteration 26000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.81241 Class average acc = 0.47571 Mean Int over Union = 0.3939
+低于原有模型训练结果，或许跟参数设置有关系。te&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Fcn32s + Pretrained VGG16&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1&gt;Iteration 56000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.79462 Class average acc = 0.4331 Mean Int over Union = 0.35841&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 01:09:59 +0800</pubDate>
         <link>http://yourdomain.com/segmentation/2016/07/27/train-on-camvid.html</link>
@@ -338,6 +442,20 @@ param {&lt;br/&gt;
 而param{lr_mult:0}表示为保留原有模型权重（载入模型）。&lt;/p&gt;
 
 &lt;p&gt;example/net_surgery.ipynb是有效地介绍如何使用surgery的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;训练过程：&lt;/strong&gt;
+1）样本预处理，均值化
+2）选择网络，ReLU
+3）初始化权重（xavier）
+4）babysitting the learning process
+5）由cross到finer处理&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;接下来,：&lt;/strong&gt;
+1）参数更新机制（adam，agagrad,）
+2）学习速率调节
+3）Dropout
+4）梯度检查
+5）模型聚合&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 00:44:59 +0800</pubDate>
         <link>http://yourdomain.com/segmentation/2016/07/27/train-overall.html</link>

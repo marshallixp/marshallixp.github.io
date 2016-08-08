@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width initial-scale=1">
 
-  <title>Train on CamVid</title>
-  <meta name="description" content="camvid training and testpython /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prototxt /SegNet/Models/Training/segnet_iter_10000.caffem...">
+  <title>lsd-slam test</title>
+  <meta name="description" content="some words before...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-on-camvid.html">
+  <link rel="canonical" href="http://yourdomain.com/slam/2016/07/30/lsd-slam-run-on-usbcam.html">
   <link rel="alternate" type="application/atom+xml" title="Deep Learning Study" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -57,44 +57,38 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Train on CamVid</h1>
-    <p class="post-meta">Jul 27, 2016</p>
+    <h1 class="post-title">lsd-slam test</h1>
+    <p class="post-meta">Jul 30, 2016</p>
   </header>
 
   <article class="post-content">
-    <p><strong>camvid training and test</strong>
-python /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prototxt /SegNet/Models/Training/segnet_iter_10000.caffemodel /Segnet/Models/Inference/</p>
+    <p>some words before...</p>
 
-<p><strong>SegNet + Pretrained VGG16</strong></p>
+<p> <strong>semantics are necessary to build bigger and better SLAM systems.</strong><br/>
+ <strong>Robotics is the killer application of SLAM</strong><br/>
+ <strong>Will end-to-end learning soon replace the mostly manual labor involved in building today’s SLAM systems?. </strong><br/>
+ ->  Integrating semantics into SLAM is often talk about, but it is easier said than done. Moreno's PhD thesis: Dense Semantic SLAM</p>
 
-<h1>Iteration 30000:</h1>
+<p> <strong>SLAM (construction) <---help---> Deep Learning (perception)</strong>
+ large-scale "correspondence engines" -> large-scale datasets</p>
 
-<p>Global acc = 0.85501 Class average acc = 0.5228 Mean Int over Union = 0.44517</p>
-
-<h1>Iteration 20000:</h1>
-
-<p>Global acc = 0.85167 Class average acc = 0.52274 Mean Int over Union = 0.44069</p>
-
-<h1>Iteration 10000:</h1>
-
-<p>Global acc = 0.85101 Class average acc = 0.46322 Mean Int over Union = 0.40203</p>
-
-<p>SegNet modified (修正crop层，可以自动实现不同层之间的匹配)</p>
-
-<h1>Iteration 16468:</h1>
-
-<p>Global acc = 0.81453 Class average acc = 0.46955 Mean Int over Union = 0.3876</p>
-
-<h1>Iteration 26000:</h1>
-
-<p>Global acc = 0.81241 Class average acc = 0.47571 Mean Int over Union = 0.3939
-低于原有模型训练结果，或许跟参数设置有关系。te</p>
-
-<p><strong>Fcn32s + Pretrained VGG16</strong></p>
-
-<h1>Iteration 56000:</h1>
-
-<p>Global acc = 0.79462 Class average acc = 0.4331 Mean Int over Union = 0.35841</p>
+<p>调试过程：
+1. 确认摄像头是或否工作，运用cheese
+2. 安装ros下的库uvc_camera，确认摄像头所对应设备号/dev/video*
+3. 在uvc_camera下新建launch文件夹，再新建uvc_camera_node.launch文件，复制以下代码
+<launch><arg name="device" default="/dev/video0"/>
+   <node pkg="uvc_camera" type="camera_node" name="uvc_camera" output="screen">
+    <param name="width" type="int" value="640" />
+    <param name="height" type="int" value="480" />
+    <param name="fps" type="int" value="30" />
+    <param name="frame" type="string" value="wide_stereo" />
+    <param name="device" type="string" value="/dev/video0" />
+  </node>
+</launch>
+4. 运行roscore
+5. 运行rosrun lsd_slam_viewer viewer
+6. 运行roslaunch uvc_camera uvc_camera_node.launch
+7. 运行rosrun lsd_slam_core live_slam /image:=image_raw _calib:=~/ROS_DEV/rosbuild_ws/package_dir/lsd_slam/lsd_slam_core/calib/FOVxxx.cfg</p>
 
   </article>
 
