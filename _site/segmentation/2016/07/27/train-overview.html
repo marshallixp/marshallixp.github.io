@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width initial-scale=1">
 
-  <title>solver文件各参数说明文档</title>
+  <title>Train Overview</title>
   <meta name="description" content="train_net/test_net ： 网络定义文件的路径test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_sizetest_interval : 训练阶段，定义迭代的次数进行测...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-overall.html">
+  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-overview.html">
   <link rel="alternate" type="application/atom+xml" title="Deep Learning Study" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -57,7 +57,7 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">solver文件各参数说明文档</h1>
+    <h1 class="post-title">Train Overview</h1>
     <p class="post-meta">Jul 27, 2016</p>
   </header>
 
@@ -106,6 +106,11 @@ param {<br/>
 3）Dropout
 4）梯度检查
 5）模型聚合</p>
+
+<p><font color=#FF0000 size=4>
+<strong>Patchwise training is loss sampling</strong><br/>
+Sampling in patchwise training can correct class imbalance, and mitigate the spatical correlation of dense patches. In fully convolutional training, class balance can also be achieved by weighting the loss, and loss sampling can be used to address spatial correlation.
+</font></p>
 
   </article>
 

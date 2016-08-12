@@ -140,4 +140,4 @@ weight_decay: 0.0005
 
 对于fcn32s网络来说，由于一开始并没有弄清楚各个训练参数和网络模型参数的意思，始终将vgg16对应层进入训练，相反最后的score_fr和upscore层并没有进行训练;除此以外，除vgg16对应层外的如fc6_conv等并没有有效初始化，无法实现参数更新。而且，当训练参数如base_lr设置太小（如1e-10）也会导致训练收敛速度过慢。当然，normalize softmax loss也是必须的。
 
-PS:　对于fcn32s相较于SegNet来说，decoder部分层数少，所有训练过程速度要快于后者。
+PS:　对于fcn32s相较于SegNet来说，decoder部分层数少，因而训练过程速度要快于后者。
