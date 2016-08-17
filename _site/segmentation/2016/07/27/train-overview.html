@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width initial-scale=1">
 
   <title>Train Overview</title>
-  <meta name="description" content="train_net/test_net ： 网络定义文件的路径test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_sizetest_interval : 训练阶段，定义迭代的次数进行测...">
+  <meta name="description" content="solver.prototxt参数说明train_net/test_net ： 网络定义文件的路径test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_sizetest_interva...">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://yourdomain.com/segmentation/2016/07/27/train-overview.html">
@@ -62,22 +62,23 @@
   </header>
 
   <article class="post-content">
-    <pre><code>train_net/test_net ： 网络定义文件的路径
+    <p><strong>solver.prototxt参数说明</strong>
+train_net/test_net ： 网络定义文件的路径
 test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_size
 test_interval : 训练阶段，定义迭代的次数进行测试，如500次迭代一次测试
 base_lr ： 初始学习速率
 - fixed : 保持base_lr不变
 - step ： 需设置stepsize, 返回base_lr * gamma ^ (floor(iter / stepsize))
-- inv : 需设置power，返回base_lr * (1 + gamma*iter)^(-power)
-- poly : 进行多项式误差，返回base_lr*(1-iter/max_iter)^power
-- sigmoid ： 进行sigmoid衰减，返回base_lr*(1/(1+exp(-gamma*(iter-stepsize))))
+- inv : 需设置power，返回base_lr * (1 + gamma<em>iter)<sup>-power</sup>
+- poly : 进行多项式误差，返回base_lr</em>(1-iter/max_iter)<sup>power</sup>
+- sigmoid ： 进行sigmoid衰减，返回base_lr<em>(1/(1+exp(-gamma</em>(iter-stepsize))))
 momentum : 含该参数的sgd
 weight_decay : 权重衰减
 lr_policy : 学习参数的衰减方式
 gamma, power
-</code></pre>
+iter_size : 实际的batch_size等于iter_size x 网络定义的batch_size，因此每一次迭代的loss是iter_size次迭代的总和，再除以iter_size。如此设置是应对直接使用大batch_size会导致out of memory，借助这个方法可以使用较小的batch_size来完成实际上处理相同数据量的工作。</p>
 
-<p><strong>Training</strong>
+<p><strong>Training</strong><br/>
 solver = caffe.SGDSolver("solver.prototxt")<br/>
 如果进行fine-tune，则需要调用<br/>
 solver.net.copy_from('xxx.caffemodel')
@@ -110,6 +111,8 @@ param {<br/>
 <p><font color=#FF0000 size=4>
 <strong>Patchwise training is loss sampling</strong><br/>
 Sampling in patchwise training can correct class imbalance, and mitigate the spatical correlation of dense patches. In fully convolutional training, class balance can also be achieved by weighting the loss, and loss sampling can be used to address spatial correlation.
+<strong>Class Balancing</strong><br/>
+Fully convolutional training can balance classes by weighting or sampling the loss. No need to balance class.
 </font></p>
 
   </article>

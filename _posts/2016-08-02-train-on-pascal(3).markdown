@@ -11,7 +11,7 @@ categories: segmentation
 a. Fcn32s on Pascal
 b. Fcn32s on CamVid
 c. SegNet on CamVid
-以上都有接近文章的效果ne
+以上都有接近文章的效果
 
 而SegNet on Pascal依然无法实现，正在测试几种改进方案：
 1）增加Dropout

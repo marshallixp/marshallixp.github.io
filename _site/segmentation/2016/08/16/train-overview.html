@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+
+  <title>Train Overview</title>
+  <meta name="description" content="目前，我们已经基本上完成了SegNet和Fcn两种网络分别在CamVid和PascalVOC2012上的训练。首先，SegNet较好地完成了CamVid训练，在没有进行样本扩增的条件下，取得了接近文献中所述的训练结果：Iteration 30000:Global acc = 0.85501 Class avera...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/08/16/train-overview.html">
+  <link rel="alternate" type="application/atom+xml" title="Deep Learning Study" href="http://yourdomain.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Deep Learning Study</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Train Overview</h1>
+    <p class="post-meta">Aug 16, 2016</p>
+  </header>
+
+  <article class="post-content">
+    <p>目前，我们已经基本上完成了SegNet和Fcn两种网络分别在CamVid和PascalVOC2012上的训练。
+首先，SegNet较好地完成了CamVid训练，在没有进行样本扩增的条件下，取得了接近文献中所述的训练结果：</p>
+
+<h1>Iteration 30000:</h1>
+
+<p>Global acc = 0.85501 Class average acc = 0.5228 Mean Int over Union = 0.44517</p>
+
+<p>然而，该网络在PascalVOC2012训练集上，出现了一些问题。由于训练集中图片大小不一致，在后面的从pooling层max location坐标返回到进过upsample的数据时候会出现不对应的情况。因而，我们最先修改了网络中的upsample部分，用x2的方式扩大，再crop的方式，实现不同大小的图片数据训练。但是，无法进行多张图片的batch训练。不幸地是，我们发现网络非常难收敛，以至于总是落入局部，导致只能收敛到背景类。</p>
+
+<p>接下来，我们重新修改了网络实现了以224x224大小的输入，并且从原图中分割出了左上、左下、右上、右下、中五个部分的自图片，构成新的数据集，再采用批量训练的方式进行训练。遗憾的是，SegNet无法获得很好的结果，可能是考虑到该网络更适合全尺寸图片作为输入的方式进行。</p>
+
+<p>对于Fcn系列网络，我们依照文中所示方法，采用了分阶段的训练模式。先进行Fcn32s的训练，再Fcn16s，最后Fcn8s。根据这样的方法，我们在两个数据库中获得的结果如下：
+<em>CamVid:</em>
+Fcn32s # Iteration 100000:
+Global acc = 0.80453 Class average acc = 0.47098 Mean Int over Union = 0.3897
+Fcn16s # Iteration 100000:
+Global acc = 0.81284 Class average acc = 0.4834 Mean Int over Union = 0.40864
+Fcn8s 出现了网络倒退的情况，理论上较Fcn16s应没有太大的提升。</p>
+
+<p><em>PascalVOC2012:</em> (我们选取训练中最优结果)
+Fcn32s</p>
+
+<blockquote><blockquote><blockquote><p>2016-08-15 10:59:04.305616 Begin seg tests
+2016-08-15 11:03:10.741634 Iteration 24000 loss 0.527342150643
+2016-08-15 11:03:10.741799 Iteration 24000 overall accuracy 0.842504675537
+2016-08-15 11:03:10.741979 Iteration 24000 mean accuracy 0.740968773048
+2016-08-15 11:03:10.742108 Iteration 24000 mean IU 0.497978761185
+2016-08-15 11:03:10.742194 Iteration 24000 fwavacc 0.7562668472066
+文中的结果IU为59.4</p></blockquote></blockquote></blockquote>
+
+<p>Fcn16s</p>
+
+<blockquote><blockquote><blockquote><p>2016-08-15 12:25:01.189435 Begin seg tests
+2016-08-15 12:27:44.222110 Iteration 24000 loss 0.435023135992
+2016-08-15 12:27:44.222216 Iteration 24000 overall accuracy 0.874859384552
+2016-08-15 12:27:44.222333 Iteration 24000 mean accuracy 0.715943696788
+2016-08-15 12:27:44.222608 Iteration 24000 mean IU 0.536879623865
+2016-08-15 12:27:44.222697 Iteration 24000 fwavacc 0.796204639853
+文中的结果IU为62.4</p></blockquote></blockquote></blockquote>
+
+<p>Fcn8s
+结果目前还没有出来。文中结果IU为62.7</p>
+
+<p>总结：
+Fcn系列网络的缺点：
+1) Fcn的Deconvolution层学习upsample它的输入特征图机制并没有保留Spatial correlation.
+2) 由于Fcn最多只调用到conv3层，没有用到精度更高的特征图，会导致失去边缘信息
+3) 重用encoder部分的特征图，增大了内存的开销
+4) 必须采用分阶段训练方法，也就是说如果最初的Fcn32s训练不好，最终的Fcn8s训练也不会有太大的提升。</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Deep Learning Study</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Deep Learning Study</li>
+          <li><a href="mailto:marshallixp@hotmail.com">marshallixp@hotmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/marshallixp">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">marshallixp</span>
+            </a>
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Explain the state-of-art research and Track our latest experiments.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width initial-scale=1">
 
-  <title>Train on Pascal(3)</title>
-  <meta name="description" content="通过测试，验证了通过voc_layer均值化后的data和转换成1x1xHxW的label数据的正确。label是包含0~20以及255的同尺寸数据。label:0对应background，而1~20对应不同目标类别。现在的问题是，运用segnet网络训练后，只能收敛到背景分类。">
+  <title>Train on Pascal(4)</title>
+  <meta name="description" content="根据过去近两周的工作，又仔细地研读了相关论文，针对PascalVOC2012数据集，采用了依照原论文的分阶段训练方式进行。首先，重新矫正了Fcn32s的网络参数和solver.prototxt，设置为20的iter_size，即用大小为20的batch_size进行网络参数更新。拟采用先进行Fcn32s的训练（F...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/08/02/train-on-pascal(3).html">
+  <link rel="canonical" href="http://yourdomain.com/segmentation/2016/08/12/train-on-pascal(4).html">
   <link rel="alternate" type="application/atom+xml" title="Deep Learning Study" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -57,36 +57,57 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Train on Pascal(3)</h1>
-    <p class="post-meta">Aug 2, 2016</p>
+    <h1 class="post-title">Train on Pascal(4)</h1>
+    <p class="post-meta">Aug 12, 2016</p>
   </header>
 
   <article class="post-content">
-    <p>通过测试，验证了通过voc_layer均值化后的data和转换成1x1xHxW的label数据的正确。label是包含0~20以及255的同尺寸数据。label:0对应background，而1~20对应不同目标类别。现在的问题是，运用segnet网络训练后，只能收敛到背景分类。</p>
+    <p>根据过去近两周的工作，又仔细地研读了相关论文，针对PascalVOC2012数据集，采用了依照原论文的分阶段训练方式进行。首先，重新矫正了Fcn32s的网络参数和solver.prototxt，设置为20的iter_size，即用大小为20的batch_size进行网络参数更新。拟采用先进行Fcn32s的训练（Fcn-vgg16），然后进行Fcn16s(导入Fcn32s训练结果)训练，最后将Fcn16s训练结果导入Fcn8s完成三步分阶段训练。</p>
 
-<p>目前，已经完成的训练及测试包括：
-a. Fcn32s on Pascal
-b. Fcn32s on CamVid
-c. SegNet on CamVid
-以上都有接近文章的效果</p>
+<p>关于L.Python层的batch_size修改问题，不仅可以从前文所说的进行修改，也可以在module对于对应的py文件中添加slef.batch_size= param['batch_size']进行更改，同时在forward函数中进行top的相应修改。</p>
 
-<p>而SegNet on Pascal依然无法实现，正在测试几种改进方案：
-1）增加Dropout
-2）利用basic segnet进行测试
-3）生成符合DenseImageDataLayer的label数据集
-4）只采用少量（～10）样本进行训练</p>
+<p><strong>Pascal VOC 2012 训练步骤：</strong>
+Fcn32s -> Fcn16s -> Fcn8s 或 Fcn32s -> Fcn8s</p>
 
-<p>方案1）增加了两种不同的dropout层，全覆盖和半覆盖，包括结合不同的学习速率进行训练，依然未能解决问题。</p>
+<p>Step1. 首先对Fcn32s进行训练，主要参数如下：
+base_lr: 1e-4
+momentum: 0.9
+iter_size: 20
+max_iter: 100000
+weight_decay: 0.0005</p>
 
-<p>方案2）basic segnet似乎也未见效，依然落入局部最小值，输出全为背景标记。</p>
+<p>较优训练结果：</p>
 
-<p>方案3）通过在网络测试过程中，获取的经过处理后的label图片，保存至SegmentationClass-SegNet，再调用DenseImageDataLayer进行读取。经测试，依然无效。</p>
+<blockquote><blockquote><blockquote><p>2016-08-15 10:59:04.305616 Begin seg tests
+2016-08-15 11:03:10.741634 Iteration 24000 loss 0.527342150643
+2016-08-15 11:03:10.741799 Iteration 24000 overall accuracy 0.842504675537
+2016-08-15 11:03:10.741979 Iteration 24000 mean accuracy 0.740968773048
+2016-08-15 11:03:10.742108 Iteration 24000 mean IU 0.497978761185
+2016-08-15 11:03:10.742194 Iteration 24000 fwavacc 0.7562668472066</p></blockquote></blockquote></blockquote>
 
-<p>方案4）采用10个训练样本，能看到loss是在不断减小，且经过大约5000次迭代(1e-4, 0.9)以后，不全是输出到背景。且通过更改weight_decay=0.5，能收敛到非背景目标。</p>
+<p>Step2. 训练Fcn16s网络，将Fcn32s网络训练结果导入，主要参数如下：
+base_lr: 1e-6
+momentum: 0.9
+iter_size: 1
+max_iter: 100000
+weight_decay: 0.0005
+较优训练结果：</p>
 
-<p>至此，我们采取的大多数测试并不能使网络有效收敛，于是，我们继续采用原文中的处理方法，将图片crop成固定大小224x224，并且通过采样不同区域，进行augmentation。再采用固定每层尺寸大小的网络，即不使用crop层，进行测试。</p>
+<blockquote><blockquote><blockquote><p>2016-08-15 12:25:01.189435 Begin seg tests
+2016-08-15 12:27:44.222110 Iteration 24000 loss 0.435023135992
+2016-08-15 12:27:44.222216 Iteration 24000 overall accuracy 0.874859384552
+2016-08-15 12:27:44.222333 Iteration 24000 mean accuracy 0.715943696788
+2016-08-15 12:27:44.222608 Iteration 24000 mean IU 0.536879623865
+2016-08-15 12:27:44.222697 Iteration 24000 fwavacc 0.796204639853
+可以看到，从统计数据上来说较前一模型有4%左右的提升。</p></blockquote></blockquote></blockquote>
 
-<p>改回upsample???</p>
+<p>Step3. 训练Fcn8s网络，将Fcn16s的训练结果导入，
+base_lr: 1e-8
+momentum: 0.99
+iter_size: 20
+max_iter: 100000
+weight_decay: 0.0005
+较优训练结果：</p>
 
   </article>
 

@@ -6,9 +6,148 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 12 Aug 2016 10:56:15 +0800</pubDate>
-    <lastBuildDate>Fri, 12 Aug 2016 10:56:15 +0800</lastBuildDate>
+    <pubDate>Wed, 17 Aug 2016 10:43:39 +0800</pubDate>
+    <lastBuildDate>Wed, 17 Aug 2016 10:43:39 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
+    
+      <item>
+        <title>Semantic Segmentation最新进展</title>
+        <description>&lt;h1&gt;Semantic Segmentation基本原理&lt;/h1&gt;
+
+&lt;p&gt;Semantic Segmentation (简称SS)是针对图像进行像素级的分类，即将每一个图像中的像素进行有效识别，从而实现对场景中不同目标，特别是目标之间的边缘进行有效识别的方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;file:///home/lixp/GitRepo/marshallixp.github.io/_posts/SemanticSegmentation/data_image.jpg&quot; alt=&quot;data&quot; /&gt;
+&lt;img src=&quot;https://i.ytimg.com/vi/Who2hli3lIw/maxresdefault.jpg&quot; alt=&quot;data&quot; /&gt;&lt;/p&gt;
+
+&lt;h1&gt;SS最新进展（深度学习）&lt;/h1&gt;
+</description>
+        <pubDate>Wed, 17 Aug 2016 18:17:00 +0800</pubDate>
+        <link>http://yourdomain.com/segmentation/2016/08/17/semantic-segmentation-state-of-art.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/08/17/semantic-segmentation-state-of-art.html</guid>
+        
+        
+        <category>segmentation</category>
+        
+      </item>
+    
+      <item>
+        <title>Train Overview</title>
+        <description>&lt;p&gt;目前，我们已经基本上完成了SegNet和Fcn两种网络分别在CamVid和PascalVOC2012上的训练。
+首先，SegNet较好地完成了CamVid训练，在没有进行样本扩增的条件下，取得了接近文献中所述的训练结果：&lt;/p&gt;
+
+&lt;h1&gt;Iteration 30000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.85501 Class average acc = 0.5228 Mean Int over Union = 0.44517&lt;/p&gt;
+
+&lt;p&gt;然而，该网络在PascalVOC2012训练集上，出现了一些问题。由于训练集中图片大小不一致，在后面的从pooling层max location坐标返回到进过upsample的数据时候会出现不对应的情况。因而，我们最先修改了网络中的upsample部分，用x2的方式扩大，再crop的方式，实现不同大小的图片数据训练。但是，无法进行多张图片的batch训练。不幸地是，我们发现网络非常难收敛，以至于总是落入局部，导致只能收敛到背景类。&lt;/p&gt;
+
+&lt;p&gt;接下来，我们重新修改了网络实现了以224x224大小的输入，并且从原图中分割出了左上、左下、右上、右下、中五个部分的自图片，构成新的数据集，再采用批量训练的方式进行训练。遗憾的是，SegNet无法获得很好的结果，可能是考虑到该网络更适合全尺寸图片作为输入的方式进行。&lt;/p&gt;
+
+&lt;p&gt;对于Fcn系列网络，我们依照文中所示方法，采用了分阶段的训练模式。先进行Fcn32s的训练，再Fcn16s，最后Fcn8s。根据这样的方法，我们在两个数据库中获得的结果如下：
+&lt;em&gt;CamVid:&lt;/em&gt;
+Fcn32s # Iteration 100000:
+Global acc = 0.80453 Class average acc = 0.47098 Mean Int over Union = 0.3897
+Fcn16s # Iteration 100000:
+Global acc = 0.81284 Class average acc = 0.4834 Mean Int over Union = 0.40864
+Fcn8s 出现了网络倒退的情况，理论上较Fcn16s应没有太大的提升。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;PascalVOC2012:&lt;/em&gt; (我们选取训练中最优结果)
+Fcn32s&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;2016-08-15 10:59:04.305616 Begin seg tests
+2016-08-15 11:03:10.741634 Iteration 24000 loss 0.527342150643
+2016-08-15 11:03:10.741799 Iteration 24000 overall accuracy 0.842504675537
+2016-08-15 11:03:10.741979 Iteration 24000 mean accuracy 0.740968773048
+2016-08-15 11:03:10.742108 Iteration 24000 mean IU 0.497978761185
+2016-08-15 11:03:10.742194 Iteration 24000 fwavacc 0.7562668472066
+文中的结果IU为59.4&lt;/p&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Fcn16s&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;2016-08-15 12:25:01.189435 Begin seg tests
+2016-08-15 12:27:44.222110 Iteration 24000 loss 0.435023135992
+2016-08-15 12:27:44.222216 Iteration 24000 overall accuracy 0.874859384552
+2016-08-15 12:27:44.222333 Iteration 24000 mean accuracy 0.715943696788
+2016-08-15 12:27:44.222608 Iteration 24000 mean IU 0.536879623865
+2016-08-15 12:27:44.222697 Iteration 24000 fwavacc 0.796204639853
+文中的结果IU为62.4&lt;/p&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Fcn8s
+结果目前还没有出来。文中结果IU为62.7&lt;/p&gt;
+
+&lt;p&gt;总结：
+Fcn系列网络的缺点：
+1) Fcn的Deconvolution层学习upsample它的输入特征图机制并没有保留Spatial correlation.
+2) 由于Fcn最多只调用到conv3层，没有用到精度更高的特征图，会导致失去边缘信息
+3) 重用encoder部分的特征图，增大了内存的开销
+4) 必须采用分阶段训练方法，也就是说如果最初的Fcn32s训练不好，最终的Fcn8s训练也不会有太大的提升。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Aug 2016 23:47:00 +0800</pubDate>
+        <link>http://yourdomain.com/segmentation/2016/08/16/train-overview.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/08/16/train-overview.html</guid>
+        
+        
+        <category>segmentation</category>
+        
+      </item>
+    
+      <item>
+        <title>Train on Pascal(4)</title>
+        <description>&lt;p&gt;根据过去近两周的工作，又仔细地研读了相关论文，针对PascalVOC2012数据集，采用了依照原论文的分阶段训练方式进行。首先，重新矫正了Fcn32s的网络参数和solver.prototxt，设置为20的iter_size，即用大小为20的batch_size进行网络参数更新。拟采用先进行Fcn32s的训练（Fcn-vgg16），然后进行Fcn16s(导入Fcn32s训练结果)训练，最后将Fcn16s训练结果导入Fcn8s完成三步分阶段训练。&lt;/p&gt;
+
+&lt;p&gt;关于L.Python层的batch_size修改问题，不仅可以从前文所说的进行修改，也可以在module对于对应的py文件中添加slef.batch_size= param['batch_size']进行更改，同时在forward函数中进行top的相应修改。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Pascal VOC 2012 训练步骤：&lt;/strong&gt;
+Fcn32s -&gt; Fcn16s -&gt; Fcn8s 或 Fcn32s -&gt; Fcn8s&lt;/p&gt;
+
+&lt;p&gt;Step1. 首先对Fcn32s进行训练，主要参数如下：
+base_lr: 1e-4
+momentum: 0.9
+iter_size: 20
+max_iter: 100000
+weight_decay: 0.0005&lt;/p&gt;
+
+&lt;p&gt;较优训练结果：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;2016-08-15 10:59:04.305616 Begin seg tests
+2016-08-15 11:03:10.741634 Iteration 24000 loss 0.527342150643
+2016-08-15 11:03:10.741799 Iteration 24000 overall accuracy 0.842504675537
+2016-08-15 11:03:10.741979 Iteration 24000 mean accuracy 0.740968773048
+2016-08-15 11:03:10.742108 Iteration 24000 mean IU 0.497978761185
+2016-08-15 11:03:10.742194 Iteration 24000 fwavacc 0.7562668472066&lt;/p&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Step2. 训练Fcn16s网络，将Fcn32s网络训练结果导入，主要参数如下：
+base_lr: 1e-6
+momentum: 0.9
+iter_size: 1
+max_iter: 100000
+weight_decay: 0.0005
+较优训练结果：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;blockquote&gt;&lt;blockquote&gt;&lt;p&gt;2016-08-15 12:25:01.189435 Begin seg tests
+2016-08-15 12:27:44.222110 Iteration 24000 loss 0.435023135992
+2016-08-15 12:27:44.222216 Iteration 24000 overall accuracy 0.874859384552
+2016-08-15 12:27:44.222333 Iteration 24000 mean accuracy 0.715943696788
+2016-08-15 12:27:44.222608 Iteration 24000 mean IU 0.536879623865
+2016-08-15 12:27:44.222697 Iteration 24000 fwavacc 0.796204639853
+可以看到，从统计数据上来说较前一模型有4%左右的提升。&lt;/p&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Step3. 训练Fcn8s网络，将Fcn16s的训练结果导入，
+base_lr: 1e-8
+momentum: 0.99
+iter_size: 20
+max_iter: 100000
+weight_decay: 0.0005
+较优训练结果：&lt;/p&gt;
+</description>
+        <pubDate>Fri, 12 Aug 2016 22:20:00 +0800</pubDate>
+        <link>http://yourdomain.com/segmentation/2016/08/12/train-on-pascal(4).html</link>
+        <guid isPermaLink="true">http://yourdomain.com/segmentation/2016/08/12/train-on-pascal(4).html</guid>
+        
+        
+        <category>segmentation</category>
+        
+      </item>
     
       <item>
         <title>Train on Pascal(3)</title>
@@ -18,7 +157,7 @@
 a. Fcn32s on Pascal
 b. Fcn32s on CamVid
 c. SegNet on CamVid
-以上都有接近文章的效果ne&lt;/p&gt;
+以上都有接近文章的效果&lt;/p&gt;
 
 &lt;p&gt;而SegNet on Pascal依然无法实现，正在测试几种改进方案：
 1）增加Dropout
@@ -229,7 +368,7 @@ weight_decay: 0.0005&lt;br/&gt;
 
 &lt;p&gt;对于fcn32s网络来说，由于一开始并没有弄清楚各个训练参数和网络模型参数的意思，始终将vgg16对应层进入训练，相反最后的score_fr和upscore层并没有进行训练;除此以外，除vgg16对应层外的如fc6_conv等并没有有效初始化，无法实现参数更新。而且，当训练参数如base_lr设置太小（如1e-10）也会导致训练收敛速度过慢。当然，normalize softmax loss也是必须的。&lt;/p&gt;
 
-&lt;p&gt;PS:　对于fcn32s相较于SegNet来说，decoder部分层数少，所有训练过程速度要快于后者。&lt;/p&gt;
+&lt;p&gt;PS:　对于fcn32s相较于SegNet来说，decoder部分层数少，因而训练过程速度要快于后者。&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 23:09:00 +0800</pubDate>
         <link>http://yourdomain.com/segmentation/2016/07/27/train-on-pascal(2).html</link>
@@ -432,6 +571,19 @@ python /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prot
 
 &lt;p&gt;Global acc = 0.79462 Class average acc = 0.4331 Mean Int over Union = 0.35841&lt;/p&gt;
 
+&lt;h1&gt;Iteration 100000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.80453 Class average acc = 0.47098 Mean Int over Union = 0.38977&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Fcn16s + Pretrained Fcn32s&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1&gt;Iteration 100000:&lt;/h1&gt;
+
+&lt;p&gt;Global acc = 0.81284 Class average acc = 0.4834 Mean Int over Union = 0.40864&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Fcn8s + Pretrained Fcn16s&lt;/strong&gt;
+网络出现退化情况&lt;/p&gt;
+
 &lt;p&gt;&lt;strong&gt;Fcn8s + Pretrained VGG16&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1&gt;Iteration 56000:&lt;/h1&gt;
@@ -439,7 +591,7 @@ python /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prot
 &lt;p&gt;Global acc = 0.70828 Class average acc = 0.36595 Mean Int over Union = 0.28398&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;总结：&lt;/strong&gt;
-在针对道路场景的语义分割训练中，我们主要参考了Fcn[1], SegNet[2], ENet[3]，这三篇文章。其中，Fcn是最早提出来通过双线性差值upsampling的方式实现end-to-end训练，生成与原图相同尺寸的语义分割map，并采用了fine-tune方法通过加载VGG16预先训练好的权重进行局部训练。Fcn针对不同尺度的细节表现和分割平滑，从encoder中的不同层提取相应的map进行组合的方式，实现综合finer和coarser部分。SegNet提出了一种对称结构的encoder-decoder网络，encoder部分省略了Vgg16的Full connected层。而在实际训练中，我们发现相较于前者，SegNet更难收敛，但是对细节的描述更加精准。而ENet主要的工作是采用留数网络ResNet的encoder结构，能够实现更快速的inference过程（训练较慢）。对于decoder部分，认为主要就是实现对原图尺寸的还原，平滑分割边界，因而采用了较小的网络结构（可能是Fcn的decoder部分）。最后，我们还参考了comma.ai上提出的方法，由于decoder的作用是尺度还原和平滑边界，可以采用较小的网络结构，他们使用的是一个16x5x5核，步长2的upscaling方法。&lt;/p&gt;
+在针对道路场景的语义分割训练中，我们主要参考了Fcn[1], SegNet[2], ENet[3]，这三篇文章。其中，Fcn是最早提出来通过双线性差值upsampling的方式实现end-to-end训练，生成与原图相同尺寸的语义分割map，并采用了fine-tune方法通过加载VGG16预先训练好的权重进行局部训练。Fcn针对不同尺度的细节表现和分割平滑，从encoder中的不同层提取相应的map进行组合的方式，实现综合finer和coarser部分。SegNet提出了一种对称结构的encoder-decoder网络，encoder部分省略了Vgg16的Full connected层。而在实际训练中，我们发现相较于前者，SegNet更难收敛，但是对细节的描述更加精准。而ENet主要的工作是采用留数网络ResNet的encoder结构，能够实现更快速的inference过程（训练较慢）。对于decoder部分，认为主要就是实现对原图尺寸的还原，平滑分割边界，因而采用了较小的网络结构（可能是Fcn32s的decoder部分）。最后，我们还参考了comma.ai上提出的方法，由于decoder的作用是尺度还原和平滑边界，可以采用较小的网络结构，他们使用的是一个16x5x5核，步长2的upscaling方法。&lt;/p&gt;
 
 &lt;p&gt;[1] Liang-Chieh Chen, George Papandreou, Iasonas Kokkinos, Kevin Murphy, Alan L. Yuille &quot;Semantic Image Segmentation with Deep Convolutional Nets and Fully Connected CRFs&quot;. arXiv:1412.7062&lt;br/&gt;
 [2] Vijay Badrinarayanan, Ankur Handa and Roberto Cipolla &quot;SegNet: A Deep Convolutional Encoder-Decoder Architecture for Robust Semantic Pixel-Wise Labelling&quot;. arXiv:1505.07293 &lt;br/&gt;
@@ -456,22 +608,23 @@ python /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prot
     
       <item>
         <title>Train Overview</title>
-        <description>&lt;pre&gt;&lt;code&gt;train_net/test_net ： 网络定义文件的路径
+        <description>&lt;p&gt;&lt;strong&gt;solver.prototxt参数说明&lt;/strong&gt;
+train_net/test_net ： 网络定义文件的路径
 test_iter : 如果数据库有1000个样本，batch_size为10，则需要100次iterations. 因而定义了test_iter，则表示测试阶段每次数据量batch_size
 test_interval : 训练阶段，定义迭代的次数进行测试，如500次迭代一次测试
 base_lr ： 初始学习速率
 - fixed : 保持base_lr不变
 - step ： 需设置stepsize, 返回base_lr * gamma ^ (floor(iter / stepsize))
-- inv : 需设置power，返回base_lr * (1 + gamma*iter)^(-power)
-- poly : 进行多项式误差，返回base_lr*(1-iter/max_iter)^power
-- sigmoid ： 进行sigmoid衰减，返回base_lr*(1/(1+exp(-gamma*(iter-stepsize))))
+- inv : 需设置power，返回base_lr * (1 + gamma&lt;em&gt;iter)&lt;sup&gt;-power&lt;/sup&gt;
+- poly : 进行多项式误差，返回base_lr&lt;/em&gt;(1-iter/max_iter)&lt;sup&gt;power&lt;/sup&gt;
+- sigmoid ： 进行sigmoid衰减，返回base_lr&lt;em&gt;(1/(1+exp(-gamma&lt;/em&gt;(iter-stepsize))))
 momentum : 含该参数的sgd
 weight_decay : 权重衰减
 lr_policy : 学习参数的衰减方式
 gamma, power
-&lt;/code&gt;&lt;/pre&gt;
+iter_size : 实际的batch_size等于iter_size x 网络定义的batch_size，因此每一次迭代的loss是iter_size次迭代的总和，再除以iter_size。如此设置是应对直接使用大batch_size会导致out of memory，借助这个方法可以使用较小的batch_size来完成实际上处理相同数据量的工作。&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Training&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;Training&lt;/strong&gt;&lt;br/&gt;
 solver = caffe.SGDSolver(&quot;solver.prototxt&quot;)&lt;br/&gt;
 如果进行fine-tune，则需要调用&lt;br/&gt;
 solver.net.copy_from('xxx.caffemodel')
@@ -504,6 +657,8 @@ param {&lt;br/&gt;
 &lt;p&gt;&lt;font color=#FF0000 size=4&gt;
 &lt;strong&gt;Patchwise training is loss sampling&lt;/strong&gt;&lt;br/&gt;
 Sampling in patchwise training can correct class imbalance, and mitigate the spatical correlation of dense patches. In fully convolutional training, class balance can also be achieved by weighting the loss, and loss sampling can be used to address spatial correlation.
+&lt;strong&gt;Class Balancing&lt;/strong&gt;&lt;br/&gt;
+Fully convolutional training can balance classes by weighting or sampling the loss. No need to balance class.
 &lt;/font&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 27 Jul 2016 00:44:59 +0800</pubDate>
