@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 17 Aug 2016 10:43:39 +0800</pubDate>
-    <lastBuildDate>Wed, 17 Aug 2016 10:43:39 +0800</lastBuildDate>
+    <pubDate>Wed, 17 Aug 2016 10:48:42 +0800</pubDate>
+    <lastBuildDate>Wed, 17 Aug 2016 10:48:42 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
     
       <item>
@@ -16,8 +16,8 @@
 
 &lt;p&gt;Semantic Segmentation (简称SS)是针对图像进行像素级的分类，即将每一个图像中的像素进行有效识别，从而实现对场景中不同目标，特别是目标之间的边缘进行有效识别的方法。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;file:///home/lixp/GitRepo/marshallixp.github.io/_posts/SemanticSegmentation/data_image.jpg&quot; alt=&quot;data&quot; /&gt;
-&lt;img src=&quot;https://i.ytimg.com/vi/Who2hli3lIw/maxresdefault.jpg&quot; alt=&quot;data&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/marshallixp/marshallixp.github.io/blob/master/_posts/SemanticSegmentation/data_image.jpg&quot; alt=&quot;data&quot; /&gt;
+&lt;img src=&quot;https://github.com/marshallixp/marshallixp.github.io/blob/master/_posts/SemanticSegmentation/label_image.jpg&quot; alt=&quot;label&quot; /&gt;&lt;/p&gt;
 
 &lt;h1&gt;SS最新进展（深度学习）&lt;/h1&gt;
 </description>
