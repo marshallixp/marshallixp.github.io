@@ -6,20 +6,26 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 17 Aug 2016 10:48:42 +0800</pubDate>
-    <lastBuildDate>Wed, 17 Aug 2016 10:48:42 +0800</lastBuildDate>
+    <pubDate>Wed, 17 Aug 2016 11:33:17 +0800</pubDate>
+    <lastBuildDate>Wed, 17 Aug 2016 11:33:17 +0800</lastBuildDate>
     <generator>Jekyll v2.5.0</generator>
     
       <item>
         <title>Semantic Segmentation最新进展</title>
         <description>&lt;h1&gt;Semantic Segmentation基本原理&lt;/h1&gt;
 
-&lt;p&gt;Semantic Segmentation (简称SS)是针对图像进行像素级的分类，即将每一个图像中的像素进行有效识别，从而实现对场景中不同目标，特别是目标之间的边缘进行有效识别的方法。&lt;/p&gt;
+&lt;p&gt;Semantic Segmentation (简称SS)是针对图像进行像素级的分类，即将每一个图像中的像素进行有效识别，从而实现对场景中不同目标，特别是不同目标之间的边缘进行有效识别的方法。目前，在SS处理的具体实现方法大都通过深度学习中卷积神经网络作为encoder层，将原始图片逐步降维，生成一系列不同尺寸的特征图（feature map）。再通过以上采样（upsample）作为decoder，涉及多个不同名词：deconvolution、transposed convolution等，实现从小尺度还原到原始图片尺度的像素级预测。由于在encoder部分，往往采用VGG16网络结构训练出的参数模型进行fine-tuning，那么主要工作就是如何实现将特征图还原到原始尺寸。根据这个思想，文献[1]较早提出来Fully Convolutional层（Fcn32s/16s/8s）替代VGG16的全连接（Fully Connected）层，再通过反向卷积层的双线性差值进行上采样的初始化，并且加以参数学习能力，实现从特征图还原到原始尺寸的预测。然而Fcn系列网络的训练采用分阶段进行，而且最多只调用到encoder第三层的特征图，缺少更高精度的像素信息，同时具有较大的内存开销。但是其思想具有很高的实用价值，end-to-end训练的简易性，并且性能上取得了突破性的成果。后来的研究者大都基于该思想设计网络，包括Noh等人[2][3]提出的运用encoder特征图的max location替代直接使用特征图，进行非线性上采样方法，Vijay等人[4]提出的encoder-decoder对称结构，Liu等人[5]运用特征组合的方式将局部信息和全局信息融合，Adam等人[6]运用留数网络作为encoder结合小规模的decoder等工作大都能看到Fcn思想的影子，只是结构上多有不同。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://github.com/marshallixp/marshallixp.github.io/blob/master/_posts/SemanticSegmentation/data_image.jpg&quot; alt=&quot;data&quot; /&gt;
-&lt;img src=&quot;https://github.com/marshallixp/marshallixp.github.io/blob/master/_posts/SemanticSegmentation/label_image.jpg&quot; alt=&quot;label&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;但是，从目前的研究进展看，依然还存在着网络泛化能力不足，精度不高（IU80%）等问题，特别是在复杂场景中出现的小目标识别、边缘信息识别等障碍。我们接下来看看近期该领域的研究进展。&lt;/p&gt;
 
 &lt;h1&gt;SS最新进展（深度学习）&lt;/h1&gt;
+
+&lt;p&gt;[1] Long, Jonathan, Evan Shelhamer, and Trevor Darrell. &quot;Fully convolutional networks for semantic segmentation.&quot; Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2015.
+[2] Noh, Hyeonwoo, Seunghoon Hong, and Bohyung Han. &quot;Learning deconvolution network for semantic segmentation.&quot; Proceedings of the IEEE International Conference on Computer Vision. 2015.
+[3] Hong, Seunghoon, Hyeonwoo Noh, and Bohyung Han. &quot;Decoupled deep neural network for semi-supervised semantic segmentation.&quot; Advances in Neural Information Processing Systems. 2015.
+[4] Vijay Badrinarayanan, Ankur Handa and Roberto Cipolla &quot;SegNet: A Deep Convolutional Encoder-Decoder Architecture for Robust Semantic Pixel-Wise Labelling&quot;. arXiv:1505.07293 &lt;br/&gt;
+[5] Liu, Wei, Andrew Rabinovich, and Alexander C. Berg. &quot;Parsenet: Looking wider to see better.&quot; arXiv preprint arXiv:1506.04579 (2015).
+[6] Adam Paszke, Abhishek Chaurasia, Sangpil Kim, Eugenio Culurciello &quot;ENet: A Deep Neural Network Architecture for Real-Time Semantic Segmentation&quot;. arXiv:1606.02147.&lt;/p&gt;
 </description>
         <pubDate>Wed, 17 Aug 2016 18:17:00 +0800</pubDate>
         <link>http://yourdomain.com/segmentation/2016/08/17/semantic-segmentation-state-of-art.html</link>
@@ -593,7 +599,7 @@ python /Segnet/Scripts/compute_bn_statistics.py /SegNet/Models/segnet_train.prot
 &lt;p&gt;&lt;strong&gt;总结：&lt;/strong&gt;
 在针对道路场景的语义分割训练中，我们主要参考了Fcn[1], SegNet[2], ENet[3]，这三篇文章。其中，Fcn是最早提出来通过双线性差值upsampling的方式实现end-to-end训练，生成与原图相同尺寸的语义分割map，并采用了fine-tune方法通过加载VGG16预先训练好的权重进行局部训练。Fcn针对不同尺度的细节表现和分割平滑，从encoder中的不同层提取相应的map进行组合的方式，实现综合finer和coarser部分。SegNet提出了一种对称结构的encoder-decoder网络，encoder部分省略了Vgg16的Full connected层。而在实际训练中，我们发现相较于前者，SegNet更难收敛，但是对细节的描述更加精准。而ENet主要的工作是采用留数网络ResNet的encoder结构，能够实现更快速的inference过程（训练较慢）。对于decoder部分，认为主要就是实现对原图尺寸的还原，平滑分割边界，因而采用了较小的网络结构（可能是Fcn32s的decoder部分）。最后，我们还参考了comma.ai上提出的方法，由于decoder的作用是尺度还原和平滑边界，可以采用较小的网络结构，他们使用的是一个16x5x5核，步长2的upscaling方法。&lt;/p&gt;
 
-&lt;p&gt;[1] Liang-Chieh Chen, George Papandreou, Iasonas Kokkinos, Kevin Murphy, Alan L. Yuille &quot;Semantic Image Segmentation with Deep Convolutional Nets and Fully Connected CRFs&quot;. arXiv:1412.7062&lt;br/&gt;
+&lt;p&gt;[1] Long, Jonathan, Evan Shelhamer, and Trevor Darrell. &quot;Fully convolutional networks for semantic segmentation.&quot; Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2015.
 [2] Vijay Badrinarayanan, Ankur Handa and Roberto Cipolla &quot;SegNet: A Deep Convolutional Encoder-Decoder Architecture for Robust Semantic Pixel-Wise Labelling&quot;. arXiv:1505.07293 &lt;br/&gt;
 [3] Adam Paszke, Abhishek Chaurasia, Sangpil Kim, Eugenio Culurciello &quot;ENet: A Deep Neural Network Architecture for Real-Time Semantic Segmentation&quot;. arXiv:1606.02147.&lt;/p&gt;
 </description>

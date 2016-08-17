@@ -80,6 +80,6 @@ Global acc = 0.70828 Class average acc = 0.36595 Mean Int over Union = 0.28398
 **总结：**
 在针对道路场景的语义分割训练中，我们主要参考了Fcn[1], SegNet[2], ENet[3]，这三篇文章。其中，Fcn是最早提出来通过双线性差值upsampling的方式实现end-to-end训练，生成与原图相同尺寸的语义分割map，并采用了fine-tune方法通过加载VGG16预先训练好的权重进行局部训练。Fcn针对不同尺度的细节表现和分割平滑，从encoder中的不同层提取相应的map进行组合的方式，实现综合finer和coarser部分。SegNet提出了一种对称结构的encoder-decoder网络，encoder部分省略了Vgg16的Full connected层。而在实际训练中，我们发现相较于前者，SegNet更难收敛，但是对细节的描述更加精准。而ENet主要的工作是采用留数网络ResNet的encoder结构，能够实现更快速的inference过程（训练较慢）。对于decoder部分，认为主要就是实现对原图尺寸的还原，平滑分割边界，因而采用了较小的网络结构（可能是Fcn32s的decoder部分）。最后，我们还参考了comma.ai上提出的方法，由于decoder的作用是尺度还原和平滑边界，可以采用较小的网络结构，他们使用的是一个16x5x5核，步长2的upscaling方法。
 
-[1] Liang-Chieh Chen, George Papandreou, Iasonas Kokkinos, Kevin Murphy, Alan L. Yuille "Semantic Image Segmentation with Deep Convolutional Nets and Fully Connected CRFs". arXiv:1412.7062  
+[1] Long, Jonathan, Evan Shelhamer, and Trevor Darrell. "Fully convolutional networks for semantic segmentation." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2015.
 [2] Vijay Badrinarayanan, Ankur Handa and Roberto Cipolla "SegNet: A Deep Convolutional Encoder-Decoder Architecture for Robust Semantic Pixel-Wise Labelling". arXiv:1505.07293   
 [3] Adam Paszke, Abhishek Chaurasia, Sangpil Kim, Eugenio Culurciello "ENet: A Deep Neural Network Architecture for Real-Time Semantic Segmentation". arXiv:1606.02147.
